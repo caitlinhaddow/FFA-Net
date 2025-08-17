@@ -21,10 +21,8 @@ models_={
 	'ffa':FFA(gps=opt.gps,blocks=opt.blocks),
 }
 loaders_={
-	'its_train':ITS_train_loader,
-	'its_test':ITS_test_loader,
-	'ots_train':OTS_train_loader,
-	'ots_test':OTS_test_loader
+	'a_train':A_train_loader,
+	'a_test':A_test_loader
 }
 start_time=time.time()
 T=opt.steps	
@@ -72,12 +70,13 @@ def train(net,loader_train,loader_test,optim,criterion):
 		optim.step()
 		optim.zero_grad()
 		losses.append(loss.item())
-		print(f'\rtrain loss : {loss.item():.5f}| step :{step}/{opt.steps}|lr :{lr :.7f} |time_used :{(time.time()-start_time)/60 :.1f}',end='',flush=True)
+		if step % 10 == 0:
+			print(f'\rtrain loss : {loss.item():.5f}| step :{step}/{opt.steps}|lr :{lr :.7f} |time_used :{(time.time()-start_time)/60 :.1f}',end='',flush=True)
 
 		#with SummaryWriter(logdir=log_dir,comment=log_dir) as writer:
 		#	writer.add_scalar('data/loss',loss,step)
 
-		if step % opt.eval_step ==0 :
+		if step % opt.eval_step == 0 :
 			with torch.no_grad():
 				ssim_eval,psnr_eval=test(net,loader_test, max_psnr,max_ssim,step)
 

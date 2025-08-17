@@ -32,16 +32,16 @@ def tensorShow(tensors,titles=None):
             ax.set_title(tit)
         plt.show()
 
-class RESIDE_Dataset(data.Dataset):
+class Fire_Dataset(data.Dataset):
     def __init__(self,path,train,size=crop_size,format='.png'):
-        super(RESIDE_Dataset,self).__init__()
+        super(Fire_Dataset,self).__init__()
         self.size=size
         print('crop size',size)
         self.train=train
         self.format=format
         self.haze_imgs_dir=os.listdir(os.path.join(path,'hazy'))
         self.haze_imgs=[os.path.join(path,'hazy',img) for img in self.haze_imgs_dir]
-        self.clear_dir=os.path.join(path,'clear')
+        self.clear_dir=os.path.join(path,'clean')
     def __getitem__(self, index):
         haze=Image.open(self.haze_imgs[index])
         if isinstance(self.size,int):
@@ -49,7 +49,8 @@ class RESIDE_Dataset(data.Dataset):
                 index=random.randint(0,20000)
                 haze=Image.open(self.haze_imgs[index])
         img=self.haze_imgs[index]
-        id=img.split('/')[-1].split('_')[0]
+        # print(f"{img}")
+        id=img.split('/')[-1].split('.')[0]
         clear_name=id+self.format
         clear=Image.open(os.path.join(self.clear_dir,clear_name))
         clear=tfs.CenterCrop(haze.size[::-1])(clear)
@@ -78,13 +79,17 @@ class RESIDE_Dataset(data.Dataset):
 import os
 pwd=os.getcwd()
 print(pwd)
-path='/home/zhilin007/VS/FFA-Net/data'#path to your 'data' folder
+path='/home/caitlinhaddow/Documents/Code/FFA-Net/data'#path to your 'data' folder
 
-ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True)
-ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False)
+# ITS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/ITS',train=True,size=crop_size),batch_size=BS,shuffle=True)
+# ITS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/indoor',train=False,size='whole img'),batch_size=1,shuffle=False)
 
-OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True)
-OTS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/outdoor',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False)
+# OTS_train_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/OTS',train=True,format='.jpg'),batch_size=BS,shuffle=True)
+# OTS_test_loader=DataLoader(dataset=RESIDE_Dataset(path+'/RESIDE/SOTS/outdoor',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False)
+
+A_train_loader=DataLoader(dataset=Fire_Dataset(path+'/NHNH2/training_data',train=True,format='.png'),batch_size=BS,shuffle=True)
+A_test_loader=DataLoader(dataset=Fire_Dataset(path+'/NHNH2/test_data',train=False,size='whole img',format='.png'),batch_size=1,shuffle=False)
+
 
 if __name__ == "__main__":
     pass

@@ -1,3 +1,6 @@
+## CH Notes
+python main.py --net='ffa' --crop --crop_size=240 --blocks=19 --gps=3 --bs=2 --lr=0.0001 --trainset='a_train' --testset='a_test' --steps=500000 --eval_step=5000
+
 ##  [FFA-Net: Feature Fusion Attention Network for Single Image Dehazing](https://arxiv.org/abs/1911.07559) (AAAI 2020)
  Official implementation.
 
